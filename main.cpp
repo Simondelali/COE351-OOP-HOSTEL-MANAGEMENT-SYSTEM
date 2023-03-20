@@ -179,11 +179,13 @@ int main() {// Main function
 Hostel h = loadRooms();
 // Menu as admin or student
 int choice;
+while (true) {
 cout << "welcome to hostel management system" << endl;
 cout << "-----------------------------------" << endl;
 cout << "login as:" << endl;
 cout << "1. Admin" << endl;
 cout << "2. Student" << endl;
+cout << "3. Exit" << endl;
 cout << "Enter choice: ";
 cin >> choice;
 // Admin login
@@ -292,6 +294,13 @@ else if (choice == 2) {
             saveRooms(h);
         }
     }
+else if (choice == 3) {
+        break;
+    }
+default :
+    cout << "Invalid choice, Try again" << endl;
+}
+}
     return 0;
 
 }
