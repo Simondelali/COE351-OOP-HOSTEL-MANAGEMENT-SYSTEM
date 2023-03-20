@@ -198,11 +198,13 @@ if (choice == 1) {
     Admin a(username, password);
     // Menu for admin
     int choice;
+    while (true){
     cout << "1. Add room" << endl;
     cout << "2. Remove room" << endl;
     cout << "3. Display rooms" << endl;
     cout << "4. Book room" << endl;
     cout << "5. Unbook room" << endl;
+    cout << "6. Logout" << endl;
     cout << "Enter choice: ";
     cin >> choice;
     // Add room
@@ -244,7 +246,16 @@ if (choice == 1) {
         h.unbookRoom(roomNo);
         saveRooms(h);
     }
-}
+    // Logout
+    else if (choice == 6) {
+        break;
+    }
+    else {
+        cout << "Invalid choice! Try again" << endl;
+        cout << endl;
+    }
+}}
+
 
     // menu for student
 else if (choice == 2) {
