@@ -297,8 +297,9 @@ else if (choice == 2) {
 else if (choice == 3) {
         break;
     }
-default :
-    cout << "Invalid choice, Try again" << endl;
+    else {
+        cout << "\nInvalid choice, Try again" << endl;
+        cout << "-----------------------------------" << endl;
 }
 }
     return 0;
