@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <conio.h>
 using namespace std;
 
 // Class definitions
@@ -72,8 +73,8 @@ public:
 
 class Student : public User {
     char name[50];
-    char username[20];
-    char password[20];
+    //char username[20];
+    //char password[20];
 public:
     Student() {}
     Student(char n[], char u[], char p[]) : User(u, p) {
@@ -83,9 +84,9 @@ public:
         return name;
     }
     // authenticate function to check if username and password are correct
-    bool authenticate(char u[], char p[]) {
-        return strcmp(u, username) == 0 && strcmp(p, password) == 0;
-    }
+    //bool authenticate(char u[], char p[]) {
+      //  return strcmp(u, username) == 0 && strcmp(p, password) == 0;
+    //}
 };
 
 class Admin : public User {
@@ -113,11 +114,18 @@ public:
             }
         }
     }
+    // Function to display all rooms in table format with headers
     void displayRooms() {
+        cout << "Room No.\tType\tPrice\tAvailability" << endl;
+        for (int i = 0; i < numRooms; i++) {
+            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
+        }
+    }
+    /*void displayRooms() {
         for (int i = 0; i < numRooms; i++)
             rooms[i].display();
             cout << endl;
-    }
+    }*/
 
 Room* findRoom(char type[], int maxPrice) {
     for (int i = 0; i < numRooms; i++) {
@@ -199,7 +207,10 @@ if (choice == 1) {
     // Menu for admin
     int choice;
     while (true){
-    cout << "\n1. Add room" << endl;
+    cout << "\n----------------" << endl;
+    cout << " welcome, Admin " << endl;
+    cout << "----------------" << endl;
+    cout << "1. Add room" << endl;
     cout << "2. Remove room" << endl;
     cout << "3. Display rooms" << endl;
     cout << "4. Book room" << endl;
@@ -211,13 +222,16 @@ if (choice == 1) {
     if (choice == 1) {
         char type[10];
         int price;
-        cout << "Enter type: ";
+        cout << "Enter type(1in1, 2in1, 3in1 or 4in1): ";
         cin >> type;
-        cout << "Enter price: ";
+        cout << "Enter price in GHc: ";
         cin >> price;
         h.addRoom(type, price);
         saveRooms(h);
         cout << "Room added successfully!" << endl;
+        cout << "Press any key to continue..." << endl;
+        getch();
+        
     }
     // Remove room
     else if (choice == 2) {
@@ -227,12 +241,15 @@ if (choice == 1) {
         h.removeRoom(roomNo);
         saveRooms(h);
         cout << "Room removed successfully!" << endl;
+        cout << "Press any key to continue..." << endl;
+        getch();
     }
-    // Display rooms
+    // Display rooms 
     else if (choice == 3) {
         cout << "\nRooms:" << endl;
         cout << "------" << endl;
         h.displayRooms();
+        cout << "Press any key to continue..." << endl;
     }
     // Book room
     else if (choice == 4) {
@@ -242,6 +259,8 @@ if (choice == 1) {
         h.bookRoom(roomNo);
         saveRooms(h);
         cout << "Room booked successfully!" << endl;
+        cout << "Press any key to continue..." << endl;
+        getch();
     }
     // Unbook room
     else if (choice == 5) {
@@ -251,9 +270,16 @@ if (choice == 1) {
         h.unbookRoom(roomNo);
         saveRooms(h);
         cout << "Room unbooked successfully!" << endl;
+        cout << "Press any key to continue..." << endl;
+        getch();
     }
     // Logout
     else if (choice == 6) {
+        cout << "Logging out..." << endl;
+        cout << "Logged out successfully!" << endl;
+        cout << "Press any key to continue..." << endl;
+        getch();
+
         break;
     }
     // Invalid choice
@@ -283,12 +309,15 @@ else if (choice == 2) {
         if (choice == 1) {
             char type[10];
             int maxPrice;
+            int roomNo;
             cout << "Enter type(1in1, 2in1, 3in1 or 4in1): ";
             cin >> type;
             cout << "Enter max price: ";
             cin >> maxPrice;
+            cout << "Enter room no.: ";
+            cin >> roomNo;
             Room* room = h.findRoom(type, maxPrice);
-            if (room != NULL) {
+            if (room != NULL && room->getRoomNo() == roomNo) { 
                 room->display();
             }
             else {
