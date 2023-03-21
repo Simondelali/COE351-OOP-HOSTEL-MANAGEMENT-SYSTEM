@@ -346,7 +346,6 @@ else if (choice == 3) {
     }
     else {
         cout << "\nInvalid choice, Try again" << endl;
-        cout << "-----------------------------------" << endl;
 }
 }
     return 0;
