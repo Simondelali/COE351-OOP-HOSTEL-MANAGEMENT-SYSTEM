@@ -199,7 +199,7 @@ if (choice == 1) {
     // Menu for admin
     int choice;
     while (true){
-    cout << "1. Add room" << endl;
+    cout << "\n1. Add room" << endl;
     cout << "2. Remove room" << endl;
     cout << "3. Display rooms" << endl;
     cout << "4. Book room" << endl;
@@ -217,6 +217,7 @@ if (choice == 1) {
         cin >> price;
         h.addRoom(type, price);
         saveRooms(h);
+        cout << "Room added successfully!" << endl;
     }
     // Remove room
     else if (choice == 2) {
@@ -225,9 +226,12 @@ if (choice == 1) {
         cin >> roomNo;
         h.removeRoom(roomNo);
         saveRooms(h);
+        cout << "Room removed successfully!" << endl;
     }
     // Display rooms
     else if (choice == 3) {
+        cout << "\nRooms:" << endl;
+        cout << "------" << endl;
         h.displayRooms();
     }
     // Book room
@@ -237,6 +241,7 @@ if (choice == 1) {
         cin >> roomNo;
         h.bookRoom(roomNo);
         saveRooms(h);
+        cout << "Room booked successfully!" << endl;
     }
     // Unbook room
     else if (choice == 5) {
@@ -245,11 +250,13 @@ if (choice == 1) {
         cin >> roomNo;
         h.unbookRoom(roomNo);
         saveRooms(h);
+        cout << "Room unbooked successfully!" << endl;
     }
     // Logout
     else if (choice == 6) {
         break;
     }
+    // Invalid choice
     else {
         cout << "Invalid choice! Try again" << endl;
         cout << endl;
@@ -276,7 +283,7 @@ else if (choice == 2) {
         if (choice == 1) {
             char type[10];
             int maxPrice;
-            cout << "Enter type: ";
+            cout << "Enter type(1in1, 2in1, 3in1 or 4in1): ";
             cin >> type;
             cout << "Enter max price: ";
             cin >> maxPrice;
