@@ -46,18 +46,14 @@ public:
     int getPrice() {
         return price;
     }
-    // Function to set occupant of room
-    void setOccupant(char o[]) {
-        strcpy(occupant, o);
-    }
 };
 
 class User {
-    char username[20];
-    char password[20];
+    char username[20] = "admin1";
+    char password[20] = "password1";
 public:
     User() {}
-    User(char u[], char p[]) {
+    User(char u[], char p[]) { 
         strcpy(username, u);
         strcpy(password, p);
     }
@@ -83,6 +79,7 @@ public:
     char* getName() {
         return name;
     }
+
     // authenticate function to check if username and password are correct
     //bool authenticate(char u[], char p[]) {
       //  return strcmp(u, username) == 0 && strcmp(p, password) == 0;
@@ -147,6 +144,7 @@ void bookRoom(int roomNo) {
     Room* room = getRoom(roomNo);
     if (room != NULL && room->available()) {
         room->book();
+
         cout << "Room booked successfully!" << endl;
     }
     else {
@@ -182,13 +180,28 @@ file.close();
 }
 return h;
 }
+// file to store students in room and their details
+void saveStudents(Hostel h) {
+ofstream file("students.dat", ios::binary);
+file.write((char*)&h, sizeof(h));
+file.close();
+}
+Hostel loadStudents() {
+Hostel h;
+ifstream file("students.dat", ios::binary);
+if (file) {
+file.read((char*)&h, sizeof(h));
+file.close();
+}
+return h;
+}
 
 int main() {// Main function
 Hostel h = loadRooms();
 // Menu as admin or student
 int choice;
 while (true) {
-cout << "welcome to hostel management system" << endl;
+cout << " ***welcome to hostel management system***" << endl;
 cout << "-----------------------------------" << endl;
 cout << "login as:" << endl;
 cout << "1. Admin" << endl;
@@ -213,7 +226,7 @@ if (choice == 1) {
     cout << "1. Add room" << endl;
     cout << "2. Remove room" << endl;
     cout << "3. Display rooms" << endl;
-    cout << "4. Book room" << endl;
+    cout << "4. Assign student to a room" << endl;
     cout << "5. Unbook room" << endl;
     cout << "6. Logout" << endl;
     cout << "Enter choice: ";
@@ -251,7 +264,6 @@ if (choice == 1) {
         h.displayRooms();
         cout << "Press any key to continue..." << endl;
     }
-    // Book room
     else if (choice == 4) {
         int roomNo;
         cout << "Enter room no.: ";
