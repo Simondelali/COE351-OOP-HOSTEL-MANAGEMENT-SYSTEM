@@ -46,6 +46,14 @@ public:
     int getPrice() {
         return price;
     }
+    // set student name in room
+    void setStudentName(char n[]) {
+        strcpy(occupant, n);
+    }
+    // get student name in room
+    char* getStudentName() {
+        return occupant;
+    }
 };
 
 class User {
@@ -53,7 +61,7 @@ class User {
     char password[20] = "password1";
 public:
     User() {}
-    User(char u[], char p[]) { 
+    User(char u[], char p[]) {
         strcpy(username, u);
         strcpy(password, p);
     }
@@ -145,7 +153,7 @@ void bookRoom(int roomNo) {
     if (room != NULL && room->available()) {
         room->book();
 
-        cout << "Room booked successfully!" << endl;
+        cout << "Room " << roomNo << " booked successfully!" << endl;
     }
     else {
         cout << "Room not available." << endl;
@@ -160,6 +168,16 @@ void unbookRoom(int roomNo) {
     else {
         cout << "Room not found or already available." << endl;
     }
+}
+/*void displayStudents() {
+    cout << "Room No.\tStudent Name" << endl;
+    for (int i = 0; i < numRooms; i++) {
+        if (!rooms[i].available()) {
+            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getStudentName() << endl;
+        }
+    }*/
+int getNumRooms() {
+    cout << "Number of rooms: " << numRooms << endl;
 }
 };
 
@@ -196,6 +214,7 @@ file.close();
 return h;
 }
 
+
 int main() {// Main function
 Hostel h = loadRooms();
 // Menu as admin or student
@@ -217,6 +236,7 @@ if (choice == 1) {
     cout << "Enter password: ";
     cin >> password;
     Admin a(username, password);
+    cout << "Login successful!" << endl;
     // Menu for admin
     int choice;
     while (true){
@@ -227,14 +247,16 @@ if (choice == 1) {
     cout << "2. Remove room" << endl;
     cout << "3. Display rooms" << endl;
     cout << "4. Assign student to a room" << endl;
-    cout << "5. Unbook room" << endl;
-    cout << "6. Logout" << endl;
+    cout << "5. Unbook student from room" << endl;
+    cout << "6. Display students in a room" << endl;
+    cout << "7. Logout" << endl;
     cout << "Enter choice: ";
     cin >> choice;
     // Add room
     if (choice == 1) {
         char type[10];
         int price;
+        int roomNo = h.getNumRooms() + 1;
         cout << "Enter type(1in1, 2in1, 3in1 or 4in1): ";
         cin >> type;
         cout << "Enter price in GHc: ";
@@ -244,7 +266,7 @@ if (choice == 1) {
         cout << "Room added successfully!" << endl;
         cout << "Press any key to continue..." << endl;
         getch();
-        
+
     }
     // Remove room
     else if (choice == 2) {
@@ -257,20 +279,33 @@ if (choice == 1) {
         cout << "Press any key to continue..." << endl;
         getch();
     }
-    // Display rooms 
+    // Display rooms
     else if (choice == 3) {
         cout << "\nRooms:" << endl;
         cout << "------" << endl;
         h.displayRooms();
         cout << "Press any key to continue..." << endl;
     }
+    // Assign student to a room 
     else if (choice == 4) {
-        int roomNo;
-        cout << "Enter room no.: ";
-        cin >> roomNo;
-        h.bookRoom(roomNo);
-        saveRooms(h);
-        cout << "Room booked successfully!" << endl;
+        char name[20], type[10];
+        int maxPrice;
+        cout << "Enter name: ";
+        cin >> name;
+        cout << "Enter type(1in1, 2in1, 3in1 or 4in1): ";
+        cin >> type;
+        cout << "Enter max price in GHc: ";
+        cin >> maxPrice;
+        Room* room = h.findRoom(type, maxPrice);
+        if (room != NULL) {
+            room->book();
+            room->setStudentName(name);
+            saveRooms(h);
+            cout << "Room booked successfully!" << endl;
+        }
+        else {
+            cout << "No room available." << endl;
+        }
         cout << "Press any key to continue..." << endl;
         getch();
     }
@@ -281,12 +316,27 @@ if (choice == 1) {
         cin >> roomNo;
         h.unbookRoom(roomNo);
         saveRooms(h);
-        cout << "Room unbooked successfully!" << endl;
         cout << "Press any key to continue..." << endl;
         getch();
     }
-    // Logout
+    //Display students
     else if (choice == 6) {
+        int roomNo;
+        cout << "Enter room no.: ";
+        cin >> roomNo;
+        Room* room = h.getRoom(roomNo);
+        if (room != NULL) {
+            cout << "Student name: " << room->getStudentName() << endl;
+        }
+        else {
+            cout << "Room not found." << endl;
+        }
+        cout << "Press any key to continue..." << endl;
+        getch();
+    }
+    
+    // Logout
+    else if (choice == 7) {
         cout << "Logging out..." << endl;
         cout << "Logged out successfully!" << endl;
         cout << "Press any key to continue..." << endl;
@@ -298,10 +348,8 @@ if (choice == 1) {
     else {
         cout << "Invalid choice! Try again" << endl;
         cout << endl;
+    }}
     }
-}}
-
-
     // menu for student
 else if (choice == 2) {
        /* char username[20], password[20];
@@ -329,7 +377,7 @@ else if (choice == 2) {
             cout << "Enter room no.: ";
             cin >> roomNo;
             Room* room = h.findRoom(type, maxPrice);
-            if (room != NULL && room->getRoomNo() == roomNo) { 
+            if (room != NULL && room->getRoomNo() == roomNo) {
                 room->display();
             }
             else {
@@ -360,7 +408,8 @@ else if (choice == 3) {
         cout << "\nInvalid choice, Try again" << endl;
 }
 }
-    return 0;
-
+return 0;
 }
+
+
 
