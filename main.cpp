@@ -2,11 +2,12 @@
 #include <fstream>
 #include <cstring>
 #include <conio.h>
+#include <vector>
 using namespace std;
 
 // Class definitions
 
-class Room {
+class Room { 
     int roomNo;
     int price;
     bool isAvailable;
@@ -14,7 +15,7 @@ class Room {
     char occupant[50];
     int studentId;
 public:
-    Room() {}
+    Room() {} 
     Room(int r, int p, bool a, char t[]) {
         roomNo = r;
         price = p;
@@ -86,8 +87,7 @@ public:
 
 class Student : public User {
     char name[50];
-    //char username[20];
-    //char password[20];
+
 public:
     Student() {}
     Student(char n[], char u[], char p[]) : User(u, p) {
@@ -96,11 +96,6 @@ public:
     char* getName() {
         return name;
     }
-
-    // authenticate function to check if username and password are correct
-    //bool authenticate(char u[], char p[]) {
-      //  return strcmp(u, username) == 0 && strcmp(p, password) == 0;
-    //}
 };
 
 class Admin : public User {
@@ -109,13 +104,14 @@ public:
     Admin(char u[], char p[]) : User(u, p) {}
 };
 
-class Hostel {
+/*class Hostel {
     Room rooms[100];
     int numRooms;
 public:
     Hostel() {
         numRooms = 0;
     }
+
     // Function to add a room
     void addRoom(char type[], int price) {
         rooms[numRooms++] = Room(numRooms + 1, price, true, type);
@@ -135,20 +131,18 @@ public:
             cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
         }
     }
-    /*void displayRooms() {
-        for (int i = 0; i < numRooms; i++)
-            rooms[i].display();
-            cout << endl;
-    }*/
-
+// Function to find a room by type and maxprice and display
 Room* findRoom(char type[], int maxPrice) {
+    cout << "Room No.\tType\tPrice\tAvailability" << endl;
     for (int i = 0; i < numRooms; i++) {
-        if (strcmp(rooms[i].getType(), type) == 0 && rooms[i].getPrice() <= maxPrice && rooms[i].available()) {
-            return &rooms[i];
+        if (strcmp(rooms[i].getType(), type) == 0 && rooms[i].getPrice() <= maxPrice) {
+            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
         }
     }
+    
     return NULL;
 }
+
 Room* getRoom(int roomNo) {
     for (int i = 0; i < numRooms; i++) {
         if (rooms[i].getRoomNo() == roomNo) {
@@ -192,7 +186,82 @@ void displayStudents() {
 int getNumRooms() {
     cout << "Number of rooms: " << numRooms << endl;
 }
+};*/
+
+class Hostel {
+    vector<Room> rooms;
+public:
+    Hostel() {}
+
+    // Function to add a room
+    void addRoom(char type[], int price) {
+        rooms.push_back(Room(rooms.size() + 1, price, true, type));
+    }
+    void removeRoom(int roomNo) {
+        for (int i = 0; i < rooms.size(); i++) {
+            if (rooms[i].getRoomNo() == roomNo) {
+                rooms[i] = rooms.back();
+                rooms.pop_back();
+                break;
+            }
+        }
+    }
+    // Function to display all rooms in table format with headers
+    void displayRooms() {
+        cout << "Room No.\tType\tPrice\tAvailability" << endl;
+        for (int i = 0; i < rooms.size(); i++) {
+            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
+        }
+    }
+    // Function to find a room by type and maxprice and display
+    Room* findRoom(char type[], int maxPrice) {
+        cout << "Room No.\tType\tPrice\tAvailability" << endl;
+        for (int i = 0; i < rooms.size(); i++) {
+            if (strcmp(rooms[i].getType(), type) == 0 && rooms[i].getPrice() <= maxPrice) {
+                cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
+            }
+        }
+
+        return NULL;
+    }
+
+    Room* getRoom(int roomNo) {
+        for (int i = 0; i < rooms.size(); i++) {
+            if (rooms[i].getRoomNo() == roomNo) {
+                return &rooms[i];
+            }
+        }
+        return NULL;
+    }
+
+    void bookRoom(int roomNo, char studentName[], int studentId) {
+        Room* room = getRoom(roomNo);
+        if (room != NULL && room->available()) {
+            room->book();
+            room->setStudentName(studentName);
+            room->setStudentId(studentId);
+
+            cout << "Room " << roomNo << " booked successfully!" << endl;
+        }
+        else {
+            cout << "Room not available." << endl;
+        }
+    }
+
+    void unbookRoom(int roomNo, char studentName[], int studentId) {
+        Room* room = getRoom(roomNo);
+        if (room != NULL && !room->available()) {
+            room->unbook();
+            room->setStudentName("");
+            room->setStudentId(0);
+            cout << "Room unbooked successfully!" << endl;
+        }
+        else {
+            cout << "Room not available." << endl;
+        }
+    }
 };
+
 
 // File handling functions
 
@@ -233,7 +302,7 @@ Hostel h = loadRooms();
 // Menu as admin or student
 int choice;
 while (true) {
-cout << " ***welcome to hostel management system***" << endl;
+cout << "welcome to hostel management system" << endl;
 cout << "-----------------------------------" << endl;
 cout << "login as:" << endl;
 cout << "1. Admin" << endl;
@@ -351,14 +420,8 @@ if (choice == 1) {
     }
     // menu for student
 else if (choice == 2) {
-       /* char username[20], password[20];
-        cout << "Enter username: ";
-        cin >> username;
-        cout << "Enter password: ";
-        cin >> password;
-        Student s(username, password);
-        // Menu for student
-        int choice;*/
+        cout << "\nWelcome, Student!" << endl;
+        cout << "-----------------" << endl;
         cout << "1. Find room" << endl;
         cout << "2. Book room" << endl;
         cout << "3. Unbook room" << endl;
@@ -373,10 +436,8 @@ else if (choice == 2) {
             cin >> type;
             cout << "Enter max price: ";
             cin >> maxPrice;
-            cout << "Enter room no.: ";
-            cin >> roomNo;
             Room* room = h.findRoom(type, maxPrice);
-            if (room != NULL && room->getRoomNo() == roomNo) {
+            if (room != NULL) {
                 room->display();
             }
             else {
@@ -402,6 +463,7 @@ else if (choice == 2) {
         else if (choice == 3) {
             int roomNo;
             char studentName[20];
+            int studentId;
             cout << "Enter room no.: ";
             cin >> roomNo;
             h.unbookRoom(roomNo, studentName, 0);
@@ -417,6 +479,3 @@ else if (choice == 3) {
 }
 return 0;
 }
-
-
-
