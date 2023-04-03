@@ -21,12 +21,6 @@ public:
         isAvailable = a;
         strcpy(type, t);
     }
-    /*void display() {
-        cout << "Room No.: " << roomNo << endl;
-        cout << "Type: " << type << endl;
-        cout << "Price: " << price << endl;
-        cout << "Availability: " << (isAvailable ? "Available" : "Not Available") << endl;
-    }*/
     void book() {
         isAvailable = false;
     }
@@ -64,8 +58,26 @@ public:
         return studentId;
     }
 };
+class User{
+public:
+    string username;
+    string password;
+};
+class Admin : public User{
+public:
+    Admin(){
+    username = "admin1";
+    password = "pass1";
+}
+bool authenticate(string username, string password){
+    if (this->username == username && this->password == password){
+        return true;
+    }else{return false;}
+}
 
-class User {
+
+};
+/*class User {
     char username[20];
     char password[20];
 public:
@@ -101,7 +113,7 @@ class Admin : public User {
 public:
     Admin() {}
     Admin(char u[], char p[]) : User(u, p) {}
-};
+};*/
 
 class Hostel {
     Room rooms[100];
@@ -246,14 +258,19 @@ cout << "Enter choice: ";
 cin >> choice;
 // Admin login
 if (choice == 1) {
-    char inputusername, inputpassword;
+    string username,password;
     cout << "Enter username: ";
-    cin >> inputusername;
+    cin >> username;
     cout << "Enter password: ";
-    cin >> inputpassword;
-    //Admin a(username, password);
-    //a.authenticate;
-    cout << "Login successful!" << endl;
+    cin >> password;
+    if (a.authenticate(username, password)){
+        cout << "Login successful!" << endl;
+
+    }else{
+        cout << "Login Failed!" <<endl;
+        break;
+        }
+
     // Menu for admin
     int choice;
     while (true){
