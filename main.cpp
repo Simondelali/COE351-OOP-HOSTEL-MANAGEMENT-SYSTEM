@@ -133,6 +133,10 @@ public:
                 rooms[i] = rooms[--numRooms];
                 break;
             }
+Room* findRoom(char type[], int maxPrice) {
+    cout << "Room No.\tType\tPrice\tAvailability" << endl;
+    for (int i = 0; i < numRooms; i++) {
+        if (strcmp(rooms[i].getType(), type) == 0
         }
     }
     // Function to display all rooms in table format with headers
@@ -142,11 +146,7 @@ public:
             cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
         }
     }
-// Function to find a room by type and maxprice and display
-Room* findRoom(char type[], int maxPrice) {
-    cout << "Room No.\tType\tPrice\tAvailability" << endl;
-    for (int i = 0; i < numRooms; i++) {
-        if (strcmp(rooms[i].getType(), type) == 0 && rooms[i].getPrice() <= maxPrice) {
+// Function to find a room by type and maxprice and display && rooms[i].getPrice() <= maxPrice) {
             cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
         }
     }
@@ -290,7 +290,7 @@ if (choice == 1) {
     if (choice == 1) {
         char type[10];
         int price;
-        int roomNo = h.getNumRooms() + 1;
+        // int roomNo = h.getNumRooms() + 1;
         cout << "Enter type(1in1, 2in1, 3in1 or 4in1): ";
         cin >> type;
         cout << "Enter price in GHc: ";
