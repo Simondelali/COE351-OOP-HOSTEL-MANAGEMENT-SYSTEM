@@ -10,11 +10,11 @@ class Room {
     int price;
     bool isAvailable;
     char type[10];
-    char occupant[50]; 
+    char occupant[50];
     int studentId;
 public:
-    Room() {} 
-    Room(int r, int p, bool a, char t[]) { 
+    Room() {}
+    Room(int r, int p, bool a, char t[]) {
         roomNo = r;
         price = p;
         isAvailable = a;
@@ -77,7 +77,7 @@ bool authenticate(string username, string password){
 };
 
 class Hostel {
-    Room rooms[100]; /
+    Room rooms[100];
     int numRooms;
 public:
     Hostel() { // Constructor
@@ -107,11 +107,24 @@ public:
     }
     // Function to find a room by type and maxprice and display
 Room* findRoom(char type[], int maxPrice) {
-    cout << "Room No.\tType\tPrice\tAvailability" << endl;
+    // if no rooms are available
+    if (numRooms == 0) {
+        cout << "No rooms available." << endl;
+        return NULL;
+    }
+    // if rooms are available
+    bool found = false;
+    cout << "Room No.\tType\tPrice\tAvailability" << endl; 
     for (int i = 0; i < numRooms; i++) {
-        if (strcmp(rooms[i].getType(), type) == 0 && rooms[i].getPrice() <= maxPrice) {
+        if (strcmp(rooms[i].getType(), type) == 0 && rooms[i].getPrice() <= maxPrice) { // if room type and price is found
+            found = true; 
             cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
         }
+    }
+    // if no rooms are found
+    if (!found) {
+        cout << "No rooms found." << endl;
+        return NULL;
     }
 
     return NULL;
@@ -120,7 +133,7 @@ Room* findRoom(char type[], int maxPrice) {
 Room* getRoom(int roomNo) {
     for (int i = 0; i < numRooms; i++) {
         if (rooms[i].getRoomNo() == roomNo) { // if room number is found
-            return &rooms[i]; 
+            return &rooms[i];
         }
     }
     return NULL; // room not found
@@ -160,7 +173,7 @@ void displayStudents() {
         }
     }}
 // Function to get number of rooms
-int getNumRooms() { 
+int getNumRooms() {
     cout << "Number of rooms: " << numRooms << endl;
 }
 };
@@ -187,7 +200,7 @@ return h; // return hostel object
 }
 
 // file to store students in room and their details
-void saveStudents(Hostel h) { 
+void saveStudents(Hostel h) {
 ofstream file("students.dat", ios::binary); // open file in binary mode
 file.write((char*)&h, sizeof(h)); // write to file
 file.close(); // close file
@@ -259,7 +272,7 @@ if (choice == 1) {
         cout << "Enter price in GHc: ";
         cin >> price;
         h.addRoom(type, price); // add room
-        saveRooms(h); // save rooms to file 
+        saveRooms(h); // save rooms to file
         cout << "Room added successfully!" << endl;
         cout << "Press any key to continue..." << endl;
         getch(); // wait for user input
@@ -286,7 +299,7 @@ if (choice == 1) {
     // Assign student to a room and saveStudent
     else if (choice == 4) {
         int roomNo;
-        char studentName[20]; 
+        char studentName[20];
         int studentId;
         cout << "Enter room no.: ";
         cin >> roomNo;
@@ -352,21 +365,12 @@ else if (choice == 2) {
         if (choice == 1) {
             char type[10];
             int maxPrice;
-            int roomNo;
             cout << "Enter type(1in1, 2in1, 3in1 or 4in1): ";
             cin >> type;
             cout << "Enter max price: ";
             cin >> maxPrice;
-            //if there are no rooms
+            h.findRoom(type, maxPrice);
             
-            Room* room = h.findRoom(type, maxPrice);
-            
-            /*if (room != NULL) {
-                room->display();
-            }
-            else {
-                cout << "Room not found." << endl;
-            }*/
         }
         // Book room
         else if (choice == 2) {
@@ -379,9 +383,9 @@ else if (choice == 2) {
             cin >> studentName;
             cout << "Enter student ID: ";
             cin >> studentId;
-            h.bookRoom(roomNo, studentName, studentId);
-            saveRooms(h);
-            saveStudents(h);
+            h.bookRoom(roomNo, studentName, studentId); // book room
+            saveRooms(h); // save rooms to file
+            saveStudents(h);// save students to file
         }
         // Unbook room with student details
         else if (choice == 3) {
@@ -394,12 +398,12 @@ else if (choice == 2) {
             cin >> studentName;
             cout << "Enter student ID: ";
             cin >> studentId;
-            h.unbookRoom(roomNo, studentName, studentId);
-            saveRooms(h);
-            saveStudents(h);
+            h.unbookRoom(roomNo, studentName, studentId); // unbook room
+            saveRooms(h); // save rooms to file
+            saveStudents(h);// save students to file
         }
     }
-else if (choice == 3) {
+else if (choice == 3) { // exit
         break;
     }
     else {
