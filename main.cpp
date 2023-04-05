@@ -70,7 +70,7 @@ public:
 }
 // function to authenticate admin
 bool authenticate(string username, string password){
-    if (this->username == username && this->password == password){
+    if (this->username == username && this->password == password){ // if username and password match
         return true;
     }else{return false;}
 }
@@ -367,7 +367,7 @@ else if (choice == 2) {
             int maxPrice;
             cout << "Enter type(1in1, 2in1, 3in1 or 4in1): ";
             cin >> type;
-            cout << "Enter max price: ";
+            cout << "Enter max price in GHc: ";
             cin >> maxPrice;
             h.findRoom(type, maxPrice);
             
