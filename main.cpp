@@ -3,6 +3,7 @@
 #include <cstring>
 #include <conio.h>
 #include <string>
+
 using namespace std;
 
 class Room {
@@ -56,26 +57,8 @@ public:
     int getStudentId() {
         return studentId;
     }
-};
-class User{
-public:
-    string username;
-    string password;
-};
-class Admin : public User{
-public:
-    Admin(){
-    username = "admin1";
-    password = "pass1";
-}
-// function to authenticate admin
-bool authenticate(string username, string password){
-    if (this->username == username && this->password == password){ // if username and password match
-        return true;
-    }else{return false;}
-}
-};
 
+};
 class Hostel {
     Room rooms[100];
     int numRooms;
@@ -90,19 +73,21 @@ public:
     }
     // Function to remove a room
     void removeRoom(int roomNo) {
-        for (int i = 0; i < numRooms; i++) {
+        // find room by room number and remove it
+         for (int i = 0; i < numRooms; i++) {
             if (rooms[i].getRoomNo() == roomNo) {
-                rooms[i] = rooms[--numRooms];
+                rooms[i] = rooms[--numRooms]; 
                 break;
-            }
+            }   
         }
+        
     }
 
     // Function to display all rooms in table format with headers
     void displayRooms() {
         cout << "Room No.\tType\tPrice(GHC)\tAvailability" << endl;
         for (int i = 0; i < numRooms; i++) {
-            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
+            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() <<"\t\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
         }
     }
     // Function to find a room by type and maxprice and display
@@ -114,11 +99,11 @@ Room* findRoom(char type[], int maxPrice) {
     }
     // if rooms are available
     bool found = false;
-    cout << "Room No.\tType\tPrice\tAvailability" << endl; 
+    cout << "Room No.\tType\tPrice\tAvailability" << endl;
     for (int i = 0; i < numRooms; i++) {
         if (strcmp(rooms[i].getType(), type) == 0 && rooms[i].getPrice() <= maxPrice) { // if room type and price is found
-            found = true; 
-            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() << "\t" << (rooms[i].available() ? "Available" : "Not Available") << endl;
+            found = true;
+            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() <<"\t"<< (rooms[i].available() ? "Available" : "Not Available") << endl;
         }
     }
     // if no rooms are found
@@ -169,7 +154,7 @@ void displayStudents() {
     cout << "Room No.\tStudent Name\tStudent ID" << endl;
     for (int i = 0; i < numRooms; i++) {
         if (!rooms[i].available()) { // if room is not available
-            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getStudentName() << "\t\t" << rooms[i].getStudentId() << endl;
+            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getStudentName() << "\t" << rooms[i].getStudentId() << endl;
         }
     }}
 // Function to get number of rooms
@@ -177,10 +162,61 @@ int getNumRooms() {
     cout << "Number of rooms: " << numRooms << endl;
 }
 };
+class User{
+public:
+    string username;
+    string password;
+};
+class Admin : public User{
+public:
+    Admin(){
+    username = "admin1";
+    password = "pass1";
+}
+// function to authenticate admin
+bool authenticate(string username, string password){
+    if (this->username == username && this->password == password){ // if username and password match
+        return true;
+    }else{return false;}
+}
+};
+
+// student class to find student room details by student id and name
+class Student : public User{
+public:
+    Student(){
+    username = "student1";
+    password = "pass1";
+}
+// function to authenticate student
+bool authenticate(string username, string password){
+    if (this->username == username && this->password == password){ // if username and password match
+        return true;
+    }else{return false;}
+
+}
+// function to find student room details by student id and name
+void findStudentRoom(Hostel h, char studentName[], int studentId){
+    bool found = false;
+    for (int i = 0; i < h.getNumRooms(); i++) {
+        if (strcmp(h.getRoom(i)->getStudentName(), studentName) == 0 && h.getRoom(i)->getStudentId() == studentId) { // if student name and id match
+            found = true;
+            cout << "Room No. " << h.getRoom(i)->getRoomNo() << endl;
+            cout << "Room Type: " << h.getRoom(i)->getType() << endl;
+            cout << "Room Price: " << h.getRoom(i)->getPrice() << endl;
+            cout << "Room Availability: " << (h.getRoom(i)->available() ? "Available" : "Not Available") << endl;
+        }
+    }
+    if (!found) { 
+        cout << "No rooms found." << endl;
+    }
+}
+};
 
 
-// File handling functions
 
+
+// FILE HANDLING FUNCTIONS 
 // file to store rooms and their details
 void saveRooms(Hostel h) {
 ofstream file("rooms.dat", ios::binary); // open file in binary mode
@@ -295,6 +331,7 @@ if (choice == 1) {
         cout << "-------------------------------------------------------" << endl;
         h.displayRooms(); // display rooms
         cout << "Press any key to continue..." << endl;
+        getch(); // wait for user input
     }
     // Assign student to a room and saveStudent
     else if (choice == 4) {
@@ -370,7 +407,7 @@ else if (choice == 2) {
             cout << "Enter max price in GHc: ";
             cin >> maxPrice;
             h.findRoom(type, maxPrice);
-            
+
         }
         // Book room
         else if (choice == 2) {
@@ -401,6 +438,11 @@ else if (choice == 2) {
             h.unbookRoom(roomNo, studentName, studentId); // unbook room
             saveRooms(h); // save rooms to file
             saveStudents(h);// save students to file
+        }
+        // Invalid choice
+        else {
+            cout << "Invalid choice! Try again" << endl;
+            cout << endl;
         }
     }
 else if (choice == 3) { // exit
