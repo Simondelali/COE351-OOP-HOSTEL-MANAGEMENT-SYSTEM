@@ -3,10 +3,11 @@
 #include <cstring>
 #include <conio.h>
 #include <string>
-
+#include <iomanip>
 using namespace std;
 
 class Room {
+private:
     int roomNo;
     int price;
     bool isAvailable;
@@ -45,6 +46,7 @@ public:
     void setStudentName(char n[]) {
         strcpy(occupant, n);
     }
+
     // get student name in room
     char* getStudentName() {
         return occupant;
@@ -53,6 +55,7 @@ public:
     void setStudentId(int id) {
         studentId = id;
     }
+
     // get student id in room
     int getStudentId() {
         return studentId;
@@ -76,11 +79,11 @@ public:
         // find room by room number and remove it
          for (int i = 0; i < numRooms; i++) {
             if (rooms[i].getRoomNo() == roomNo) {
-                rooms[i] = rooms[--numRooms]; 
+                rooms[i] = rooms[--numRooms];
                 break;
-            }   
+            }
         }
-        
+
     }
 
     // Function to display all rooms in table format with headers
@@ -141,7 +144,7 @@ void bookRoom(int roomNo, char studentName[], int studentId) {
 void unbookRoom(int roomNo, char studentName[], int studentId) {
     Room* room = getRoom(roomNo); // get room by room number
     // if room is not available and student name and id match
-    if (room != NULL && !room->available() && strcmp(room->getStudentName(), studentName) == 0 && room->getStudentId() == studentId) {
+    if (room != NULL && !room->available() && strcmp(room->getStudentName(), studentName) ==0 && room->getStudentId() == studentId) {
         room->unbook();
         cout << "Room " << roomNo << " unbooked successfully!" << endl;
     }
@@ -149,14 +152,29 @@ void unbookRoom(int roomNo, char studentName[], int studentId) {
         cout << "Room not booked or Details incorrect!" << endl;
     }
 }
-// Function to display all booked rooms
+// Function to display all booked rooms in table format with headers
 void displayStudents() {
-    cout << "Room No.\tStudent Name\tStudent ID" << endl;
+    cout << "Room No.\tType\tPrice\tStudent Name\t\t\tStudent ID" << endl;
     for (int i = 0; i < numRooms; i++) {
-        if (!rooms[i].available()) { // if room is not available
-            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getStudentName() << "\t" << rooms[i].getStudentId() << endl;
+        if (!rooms[i].available()) {
+            cout << rooms[i].getRoomNo() << "\t\t" << rooms[i].getType() << "\t" << rooms[i].getPrice() <<"\t"<<left<<setw(25)<< rooms[i].getStudentName() << "\t" << rooms[i].getStudentId() << endl;
         }
-    }}
+    }
+}
+// Function to validate room booking by studentname and studentid
+void validateRoomBooking(int roomNo, char studentName[], int studentId) {
+    Room* room = getRoom(roomNo); // get room by room number
+    // if room is not available and student name and id match
+    if (room != NULL && !room->available() && strcmp(room->getStudentName(), studentName) ==0 && room->getStudentId() == studentId) {
+        cout << "Room is booked by " << studentName << " with ID " << studentId << endl;
+    }
+    else {
+        cout << "Room not booked or Details incorrect!" << endl;
+    }
+}
+
+
+
 // Function to get number of rooms
 int getNumRooms() {
     cout << "Number of rooms: " << numRooms << endl;
@@ -164,14 +182,15 @@ int getNumRooms() {
 };
 class User{
 public:
-    string username;
-    string password;
+string username;
+string password;
+
 };
 class Admin : public User{
 public:
     Admin(){
-    username = "admin1";
-    password = "pass1";
+        username = "admin1";
+        password = "pass1";
 }
 // function to authenticate admin
 bool authenticate(string username, string password){
@@ -181,42 +200,8 @@ bool authenticate(string username, string password){
 }
 };
 
-// student class to find student room details by student id and name
-class Student : public User{
-public:
-    Student(){
-    username = "student1";
-    password = "pass1";
-}
-// function to authenticate student
-bool authenticate(string username, string password){
-    if (this->username == username && this->password == password){ // if username and password match
-        return true;
-    }else{return false;}
 
-}
-// function to find student room details by student id and name
-void findStudentRoom(Hostel h, char studentName[], int studentId){
-    bool found = false;
-    for (int i = 0; i < h.getNumRooms(); i++) {
-        if (strcmp(h.getRoom(i)->getStudentName(), studentName) == 0 && h.getRoom(i)->getStudentId() == studentId) { // if student name and id match
-            found = true;
-            cout << "Room No. " << h.getRoom(i)->getRoomNo() << endl;
-            cout << "Room Type: " << h.getRoom(i)->getType() << endl;
-            cout << "Room Price: " << h.getRoom(i)->getPrice() << endl;
-            cout << "Room Availability: " << (h.getRoom(i)->available() ? "Available" : "Not Available") << endl;
-        }
-    }
-    if (!found) { 
-        cout << "No rooms found." << endl;
-    }
-}
-};
-
-
-
-
-// FILE HANDLING FUNCTIONS 
+// FILE HANDLING FUNCTIONS
 // file to store rooms and their details
 void saveRooms(Hostel h) {
 ofstream file("rooms.dat", ios::binary); // open file in binary mode
@@ -258,7 +243,7 @@ int main() {// Main function
 Hostel h = loadRooms();
 Admin a;
 // Menu as admin or student
-int choice;
+char choice;
 while (true) {
 cout << "\nwelcome to hostel management system" << endl;
 cout << "-----------------------------------" << endl;
@@ -269,7 +254,7 @@ cout << "3. Exit" << endl;
 cout << "Enter choice: ";
 cin >> choice;
 // Admin login
-if (choice == 1) {
+if (choice == '1') {
     string username,password;
     cout << "Enter username: ";
     cin >> username;
@@ -284,7 +269,6 @@ if (choice == 1) {
         }
 
     // Menu for admin
-    int choice;
     while (true){
     cout << "\n----------------" << endl;
     cout << " welcome, Admin " << endl;
@@ -299,7 +283,7 @@ if (choice == 1) {
     cout << "Enter choice: ";
     cin >> choice;
     // Add room
-    if (choice == 1) {
+    if (choice == '1') {
         char type[10];
         int price;
         int roomNo = h.getNumRooms() + 1; // get number of rooms and add 1
@@ -315,7 +299,7 @@ if (choice == 1) {
 
     }
     // Remove room
-    else if (choice == 2) {
+    else if (choice == '2') {
         int roomNo;
         cout << "Enter room no.: ";
         cin >> roomNo;
@@ -326,7 +310,7 @@ if (choice == 1) {
         getch(); // wait for user input
     }
     // Display rooms
-    else if (choice == 3) {
+    else if (choice == '3') {
         cout << "\nRooms:" << endl;
         cout << "-------------------------------------------------------" << endl;
         h.displayRooms(); // display rooms
@@ -334,14 +318,15 @@ if (choice == 1) {
         getch(); // wait for user input
     }
     // Assign student to a room and saveStudent
-    else if (choice == 4) {
+    else if (choice == '4') {
         int roomNo;
-        char studentName[20];
+        char studentName[50];
         int studentId;
         cout << "Enter room no.: ";
         cin >> roomNo;
         cout << "Enter student name: ";
-        cin >> studentName;
+        cin.ignore(); // ignore newline character
+        cin.getline(studentName, 50); // get student name
         cout << "Enter student ID: ";
         cin >> studentId;
         h.bookRoom(roomNo, studentName, studentId); // book room
@@ -352,14 +337,15 @@ if (choice == 1) {
 
     }
     // Unbook room with student details
-    else if (choice == 5) {
+    else if (choice == '5') {
         int roomNo;
-        char studentName[20];
+        char studentName[50];
         int studentId;
         cout << "Enter room no.: ";
         cin >> roomNo;
         cout << "Enter student name: ";
-        cin >> studentName;
+        cin.ignore(); // ignore newline character
+        cin.getline(studentName, 50); // get student name
         cout << "Enter student ID: ";
         cin >> studentId;
         h.unbookRoom(roomNo, studentName, studentId); // unbook room
@@ -368,14 +354,14 @@ if (choice == 1) {
         getch(); // wait for user input
     }
     //displayStudents
-    else if (choice == 6) {
+    else if (choice == '6') {
         h.displayStudents(); // display students
         cout << "Press any key to continue..." << endl;
         getch(); // wait for user input
     }
 
     // Logout
-    else if (choice == 7) {
+    else if (choice == '7') {
         cout << "Logging out..." << endl;
         cout << "Logged out successfully!" << endl;
         cout << "Press any key to continue..." << endl;
@@ -390,16 +376,19 @@ if (choice == 1) {
     }}
     }
     // menu for student
-else if (choice == 2) {
+
+else if (choice == '2') {
         cout << "\nWelcome, Student!" << endl;
         cout << "-----------------" << endl;
         cout << "1. Find room" << endl;
         cout << "2. Book room" << endl;
         cout << "3. Unbook room" << endl;
+        cout << "4. Verify your room" << endl;
+        cout << "5. Return to main menu" << endl;
         cout << "Enter choice: ";
         cin >> choice;
         // Find room
-        if (choice == 1) {
+        if (choice == '1') {
             char type[10];
             int maxPrice;
             cout << "Enter type(1in1, 2in1, 3in1 or 4in1): ";
@@ -410,14 +399,15 @@ else if (choice == 2) {
 
         }
         // Book room
-        else if (choice == 2) {
+        else if (choice == '2') {
             int roomNo;
-            char studentName[20];
+            char studentName[50];
             int studentId;
             cout << "Enter room no.: ";
             cin >> roomNo;
             cout << "Enter student name: ";
-            cin >> studentName;
+            cin.ignore(); // ignore newline character
+            cin.getline(studentName, 50);
             cout << "Enter student ID: ";
             cin >> studentId;
             h.bookRoom(roomNo, studentName, studentId); // book room
@@ -425,19 +415,39 @@ else if (choice == 2) {
             saveStudents(h);// save students to file
         }
         // Unbook room with student details
-        else if (choice == 3) {
+        else if (choice == '3') {
             int roomNo;
-            char studentName[20];
+            char studentName[50];
             int studentId;
             cout << "Enter room no.: ";
             cin >> roomNo;
             cout << "Enter student name: ";
-            cin >> studentName;
+            cin.ignore(); // ignore newline character
+            cin.getline(studentName, 50);
             cout << "Enter student ID: ";
             cin >> studentId;
             h.unbookRoom(roomNo, studentName, studentId); // unbook room
             saveRooms(h); // save rooms to file
             saveStudents(h);// save students to file
+        }
+        // validate room
+        else if (choice == '4') {
+            int roomNo;
+            char studentName[50];
+            int studentId;
+            cout << "Enter room no.: ";
+            cin >> roomNo;
+            cout << "Enter student name: ";
+            cin.ignore(); // ignore newline character
+            cin.getline(studentName, 50);
+            cout << "Enter student ID: ";
+            cin >> studentId;
+            h.validateRoomBooking(roomNo, studentName, studentId); // validate room
+        }
+        else if (choice == '5') {
+            cout << "Press any key to continue..." << endl;
+            getch(); // wait for user input
+
         }
         // Invalid choice
         else {
@@ -445,7 +455,7 @@ else if (choice == 2) {
             cout << endl;
         }
     }
-else if (choice == 3) { // exit
+else if (choice == '3') { // exit
         break;
     }
     else {
